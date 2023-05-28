@@ -10,28 +10,45 @@ public class CameraScript : MonoBehaviour
 
     public RawImage display;
 
-    public void SwamCam_Clicked()
+    public Text StartStopText;
+
+    public void OnClickCameraSwitch()
     {
         currentCameraIndex += 1;
         currentCameraIndex %= WebCamTexture.devices.Length;
+
+        if (tex != null)//start camera
+        {
+            StopWebcam();
+            OnClickCameraOn();
+        }
     }
 
-    public void StartStopCam_Clicked()
+    public void OnClickCameraOn()
     {
-        if(tex != null)
+        if(tex != null)//start camera
         {
-            display.texture = null;
-            tex.Stop();
-            tex = null;
+            StopWebcam();
+
+            StartStopText.text = "Start Camera";
         }
-        else
+        else//stop camera
         {
             WebCamDevice device = WebCamTexture.devices[currentCameraIndex];
             tex = new WebCamTexture(device.name);
             display.texture = tex;
 
             tex.Play();
+
+            StartStopText.text = "Stop Camera";
         }
+    }
+
+    private void StopWebcam()
+    {
+        display.texture = null;
+        tex.Stop();
+        tex = null;
     }
 
 }
